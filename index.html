@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Frost Strategy</title>
+    <style>
+        body { background: #1a1a1a; color: #eee; font-family: sans-serif; text-align: center; }
+        .ui-panel { display: flex; justify-content: center; gap: 20px; padding: 20px; background: #333; }
+        .grid { display: grid; grid-template-columns: repeat(4, 100px); gap: 10px; justify-content: center; margin-top: 20px; }
+        .tile { width: 100px; height: 100px; background: #444; border: 2px solid #555; display: flex; align-items: center; justify-content: center; }
+        .card { width: 120px; height: 180px; background: #600; margin: 10px; display: inline-block; cursor: pointer; border: 2px solid #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="ui-panel">
+        <div>Wood: <span id="wood">100</span></div>
+        <div>Gold: <span id="gold">50</span></div>
+        <div>Workers: <span id="workers">3</span></div>
+    </div>
+
+    <div id="grid" class="grid"></div>
+
+    <h3>Hero Cards</h3>
+    <div id="cards">
+        <div class="card" onclick="playHero('Warrior')">Warrior<br>Lv 1</div>
+        <div class="card" onclick="playHero('Mage')">Mage<br>Lv 1</div>
+    </div>
+
+    <script>
+        let res = { wood: 100, gold: 50, workers: 3 };
+
+        // 农民采集逻辑：每3秒产生资源
+        setInterval(() => {
+            res.wood += (res.workers * 2);
+            res.gold += (res.workers * 1);
+            updateUI();
+        }, 3000);
+
+        function updateUI() {
+            document.getElementById('wood').innerText = res.wood;
+            document.getElementById('gold').innerText = res.gold;
+        }
+
+        // 建造建筑逻辑
+        function build(type, costWood, costGold) {
+            if (res.wood >= costWood && res.gold >= costGold) {
+                res.wood -= costWood;
+                res.gold -= costGold;
+                const div = document.createElement('div');
+                div.className = 'tile';
+                div.innerText = type;
+                document.getElementById('grid').appendChild(div);
+                updateUI();
+            } else {
+                alert("Insufficient resources!");
+            }
+        }
+
+        // 英雄战斗逻辑
+        function playHero(name) {
+            alert("Deploying hero card: " + name + " to the battlefield!");
+        }
+
+        // 初始化显示
+        updateUI();
+    </script>
+</body>
+</html>
