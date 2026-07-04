@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Strategy Game</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        .panel { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Strategy System</h1>
+    <div class="panel">
+        <h3>Resources</h3>
+        <p id="res-display">Loading...</p>
+        <button onclick="farm()">Farm Resources</button>
+    </div>
+    <div class="panel">
+        <h3>Construction</h3>
+        <button onclick="build()">Build Academy</button>
+        <p id="build-status">Idle</p>
+    </div>
+    <div class="panel">
+        <h3>Battle</h3>
+        <button onclick="battle()">Battle Archer</button>
+        <p id="battle-result">Ready</p>
+    </div>
+
+    <script>
+        let game = {
+            grain: 200, wood: 100, tech: 1,
+            hero: { power: 100, troop: "cavalry" }
+        };
+
+        function updateUI() {
+            document.getElementById('res-display').innerText = 
+                `Grain: ${game.grain}, Wood: ${game.wood}, Tech Level: ${game.tech}`;
+        }
+
+        function farm() {
+            game.grain += 20 * game.tech;
+            game.wood += 10 * game.tech;
+            updateUI();
+        }
+
+        function build() {
+            if (game.grain >= 50) {
+                game.grain -= 50;
+                game.tech++;
+                document.getElementById('build-status').innerText = "Upgrade Finished!";
+                updateUI();
+            } else {
+                alert("Not enough grain!");
+            }
+        }
+
+        function battle() {
+            let power = game.hero.power * game.tech * 1.5; // Cavalry > Archer
+            document.getElementById('battle-result').innerText = 
+                power >= 250 ? "Victory!" : "Failure! Upgrade more.";
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
