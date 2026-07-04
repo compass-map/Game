@@ -1,0 +1,58 @@
+import time
+
+class City:
+    def __init__(self):
+        self.grain = 100  # 资源：粮草
+        self.tech_level = 1
+        self.is_upgrading = False
+
+    def produce_resources(self):
+        # 放置类逻辑：自动增加资源
+        self.grain += 10 * self.tech_level
+        print(f"当前粮草: {self.grain}")
+
+    def upgrade_tech(self):
+        if self.grain >= 50:
+            self.grain -= 50
+            self.tech_level += 1
+            print(f"科技已升级至: {self.tech_level}级")
+        else:
+            print("粮草不足，无法升级科技")
+
+class Hero:
+    def __init__(self, name, power):
+        self.name = name
+        self.power = power
+
+    def challenge_level(self, enemy_power):
+        # 战斗逻辑：简单对比战力
+        if self.power >= enemy_power:
+            print(f"{self.name} 闯关成功！获得奖励。")
+            return True
+        else:
+            print(f"{self.name} 战力不足，闯关失败。")
+            return False
+
+# --- 游戏主运行循环 ---
+def game_loop():
+    player_city = City()
+    hero = Hero("赵云", 100)
+    
+    print("--- 欢迎来到三国放置世界 ---")
+    
+    # 模拟放置过程
+    for i in range(3):
+        print(f"\n第 {i+1} 轮循环:")
+        player_city.produce_resources()
+        
+        # 自动决策：如果资源够，就升级科技
+        if player_city.grain > 100:
+            player_city.upgrade_tech()
+            hero.power += 20 # 科技提升带动武将战力
+        
+        # 自动闯关
+        hero.challenge_level(120)
+        time.sleep(1)
+
+if __name__ == "__main__":
+    game_loop()
