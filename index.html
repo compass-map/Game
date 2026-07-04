@@ -1,0 +1,67 @@
+import random
+
+class GameEngine:
+    def __init__(self):
+        # 1. 资源系统
+        self.resources = {"粮草": 200, "木材": 100, "铁矿": 50}
+        self.farmers = 5 
+        # 2. 内政与科技系统
+        self.tech_level = 1
+        self.building_queue = [] # 建造队列
+        # 3. 英雄与兵种系统
+        self.hero = {"name": "赵云", "power": 100, "troop": "骑兵"}
+        
+    def farm_resources(self):
+        """农民采集资源：受科技等级加成"""
+        for res in self.resources:
+            gain = self.farmers * 5 * self.tech_level
+            self.resources[res] += gain
+        print(f"[内政] 农民采集资源: {self.resources}")
+
+    def build_structure(self, building_name):
+        """建筑队列：限制只能同时造一个"""
+        if len(self.building_queue) == 0:
+            self.building_queue.append(building_name)
+            print(f"[建造] 已启动施工: {building_name}...")
+        else:
+            print("[建造] 队列繁忙中，请等待...")
+
+    def finish_construction(self):
+        """完成建筑：提升科技等级"""
+        if self.building_queue:
+            b = self.building_queue.pop(0)
+            self.tech_level += 1
+            print(f"[建造] {b} 竣工！科技提升至 {self.tech_level} 级。")
+        else:
+            print("[内政] 没有正在进行的建筑。")
+
+    def challenge_stage(self, enemy_power, enemy_troop):
+        """闯关挑战：综合战力计算"""
+        # 计算克制系数
+        rules = {"骑兵": "弓兵", "弓兵": "步兵", "步兵": "骑兵"}
+        bonus = 1.5 if rules.get(self.hero["troop"]) == enemy_troop else 1.0
+        
+        # 最终战力 = 基础战力 * 科技加成 * 克制系数
+        final_power = self.hero["power"] * self.tech_level * bonus
+        
+        print(f"[闯关] 面对 {enemy_troop} (战力 {enemy_power})...")
+        if final_power >= enemy_power:
+            print(f"[结果] 胜利！{self.hero['name']} 守卫成功。")
+            return True
+        else:
+            print("[结果] 失败！战力不足，请提升内政。")
+            return False
+
+# --- 游戏运行演示 ---
+def main():
+    game = GameEngine()
+    print("=== 三国放置系统：全功能版 ===")
+    
+    # 模拟游戏一天的自动循环
+    game.farm_resources()        # 采集
+    game.build_structure("军机处") # 开始造建筑
+    game.finish_construction()   # 完成升级
+    game.challenge_stage(250, "弓兵") # 进行挑战
+
+if __name__ == "__main__":
+    main()
