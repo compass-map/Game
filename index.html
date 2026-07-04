@@ -1,0 +1,63 @@
+import random
+
+class GameEngine:
+    def __init__(self):
+        # Resource management
+        self.resources = {"grain": 200, "wood": 100, "iron": 50}
+        self.farmers = 5
+        
+        # Tech and Building
+        self.tech_level = 1
+        self.building_queue = []
+        
+        # Hero and Troops
+        self.hero = {"name": "Zhao Yun", "power": 100, "troop": "cavalry"}
+        
+    def farm_resources(self):
+        for res in self.resources:
+            gain = self.farmers * 5 * self.tech_level
+            self.resources[res] += gain
+        print(f"[Internal] Resources updated: {self.resources}")
+
+    def add_to_queue(self, building_name):
+        if len(self.building_queue) == 0:
+            self.building_queue.append(building_name)
+            print(f"[Building] Construction started: {building_name}...")
+        else:
+            print("[Building] Queue busy, please wait.")
+
+    def finish_construction(self):
+        if self.building_queue:
+            b = self.building_queue.pop(0)
+            self.tech_level += 1
+            print(f"[Building] {b} finished! Tech level: {self.tech_level}")
+        else:
+            print("[Internal] No active construction.")
+
+    def challenge_stage(self, enemy_power, enemy_troop):
+        # Troop suppression logic
+        rules = {"cavalry": "archer", "archer": "infantry", "infantry": "cavalry"}
+        bonus = 1.5 if rules.get(self.hero["troop"]) == enemy_troop else 1.0
+        
+        final_power = self.hero["power"] * self.tech_level * bonus
+        
+        print(f"[Battle] Facing {enemy_troop} (Enemy Power: {enemy_power})...")
+        if final_power >= enemy_power:
+            print(f"[Result] Victory! {self.hero['name']} succeeded.")
+            return True
+        else:
+            print("[Result] Failure! Insufficient power.")
+            return False
+
+def main():
+    game = GameEngine()
+    print("=== Strategy Engine System ===")
+    
+    # Simulation
+    game.farm_resources()
+    game.add_to_queue("Academy")
+    game.finish_construction()
+    game.challenge_stage(250, "archer")
+
+if __name__ == "__main__":
+    main()
